@@ -10,6 +10,7 @@ import {
   validatorCompiler,
   ZodTypeProvider,
 } from 'fastify-type-provider-zod'
+import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes'
 
 import { errorHandler } from '@/http/error-handler'
 import { authenticateWithGithub } from '@/http/routes/auth/authenticate-with-github'
@@ -69,8 +70,19 @@ app.register(fastifySwagger, {
   transform: jsonSchemaTransform,
 })
 
+const theme = new SwaggerTheme()
+const content = theme.getBuffer(SwaggerThemeNameEnum.DARK)
+
 app.register(fastifySwaggerUI, {
   routePrefix: '/docs',
+  theme: {
+    css: [
+      {
+        filename: 'theme.css',
+        content,
+      },
+    ],
+  },
 })
 
 app.register(fastifyJwt, {
@@ -114,5 +126,5 @@ app.register(getPendingInvites)
 app.register(getOrganizationBilling)
 
 app.listen({ port: env.SERVER_PORT }).then(() => {
-  console.log('HTTP server running!')
+  console.log('HTTP server running! http://localhost:3333/docs')
 })
