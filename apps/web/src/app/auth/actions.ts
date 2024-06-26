@@ -1,5 +1,6 @@
 'use server'
 
+import { env } from '@saas/env'
 import { redirect } from 'next/navigation'
 
 export const signInWithGithub = async () => {
@@ -8,10 +9,10 @@ export const signInWithGithub = async () => {
     'https://github.com',
   )
 
-  githubSignInURL.searchParams.set('client_id', 'Ov23lilH8C9wVianmtJs')
+  githubSignInURL.searchParams.set('client_id', env.GITHUB_OAUTH_CLIENT_ID)
   githubSignInURL.searchParams.set(
     'redirect_uri',
-    'http://localhost:3000/api/auth/callback',
+    env.GITHUB_OAUTH_CLIENT_REDIRECT_URI,
   )
   githubSignInURL.searchParams.set('scope', 'user')
 

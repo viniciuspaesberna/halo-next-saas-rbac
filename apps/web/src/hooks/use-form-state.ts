@@ -1,27 +1,23 @@
-import { type FormEvent, useState, useTransition } from 'react'
+import { FormEvent, useState, useTransition } from 'react'
 
-type FormState = {
+interface FormState {
   success: boolean
   message: string | null
   fieldErrors: Record<string, string[]> | null
 }
 
-export const useFormState = (
+export function useFormState(
   action: (data: FormData) => Promise<FormState>,
-  onSuccess: () => Promise<void> | void,
+  onSuccess?: () => Promise<void> | void,
   initialState?: FormState,
-) => {
+) {
   const [isPending, startTransition] = useTransition()
 
-  const [formState, setFormState] = useState<FormState>(
-    initialState ?? {
-      success: false,
-      message: null,
-      fieldErrors: null,
-    },
+  const [formState, setFormState] = useState(
+    initialState ?? { success: false, message: null, fieldErrors: null },
   )
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const form = event.currentTarget
